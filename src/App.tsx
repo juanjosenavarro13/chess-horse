@@ -5,7 +5,7 @@ import { Posicion } from './tablero';
 
 function App() {
   const initTablero = [
-    [0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -23,7 +23,7 @@ function App() {
   };
 
   const handleClick = () => {
-    const allMoves = getAllMoves(tablero, { fila: 0, columna: 4 });
+    const allMoves = getAllMoves(tablero, { fila: 0, columna: 1 });
     executeMovesWithInterval(allMoves);
   };
 

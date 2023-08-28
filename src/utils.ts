@@ -1,61 +1,67 @@
-import { Posicion } from "./tablero";
+export function warnsdorff(board:number[][]) {
+  const numRows = board.length;
+  const numCols = board[0].length;
 
+  let x = 0;
+  let y = 4;
+  let moveNumber = 1;
 
-export function printChessTable(tablero: number[][], fila: number, columna: number, numero: number) {
-  if (tablero[fila][columna] !== 0) return tablero;
+  board[x][y] = moveNumber;
 
-  const editTablero = [...tablero];
-  editTablero[fila][columna] = numero;
-  return editTablero
+  while (moveNumber < numRows * numCols) {
+    const validMoves = getValidMoves(x, y, board);
+
+    if (validMoves.length === 0) {
+      console.log("No solution found.");
+      return;
+    }
+
+    const accessibilityScores = validMoves.map(move => getAccessibility(move.x, move.y, board));
+    const minAccessibility = Math.min(...accessibilityScores);
+
+    const nextMoveIndex = accessibilityScores.findIndex(score => score === minAccessibility);
+    const nextMove = validMoves[nextMoveIndex];
+
+    x = nextMove.x;
+    y = nextMove.y;
+    moveNumber++;
+    board[x][y] = moveNumber;
+  }
+
+  return board;
 }
 
 
 
-export function getPossibleMoves(tablero: number[][], posicion: Posicion) {
-  const possibleMoves: Posicion[] = [
-    {fila: posicion.fila -1,columna: posicion.columna -2},
-    {fila: posicion.fila -2,columna: posicion.columna -1},
-    {fila: posicion.fila +1,columna: posicion.columna -2},
-    {fila: posicion.fila +2,columna: posicion.columna -1},
-    {fila: posicion.fila -2,columna: posicion.columna +1},
-    {fila: posicion.fila -1,columna: posicion.columna +2},
-    {fila: posicion.fila +1,columna: posicion.columna +2},
-    {fila: posicion.fila +2,columna: posicion.columna +1}
+
+function getValidMoves(x:number, y:number, board:number[][]) {
+  const moves = [
+    { dx: 1, dy: 2 },
+    { dx: 2, dy: 1 },
+    { dx: 2, dy: -1 },
+    { dx: 1, dy: -2 },
+    { dx: -1, dy: -2 },
+    { dx: -2, dy: -1 },
+    { dx: -2, dy: 1 },
+    { dx: -1, dy: 2 }
   ];
 
-  const validMoves: Posicion[] = [];
-
-  for (const move of possibleMoves) {
-    const { fila, columna } = move;
-    if (fila >= 0 && fila < tablero.length && columna >= 0 && columna < tablero[0].length) {
-      validMoves.push(move);
+  const validMoves = [];
+  for (const move of moves) {
+    const newX = x + move.dx;
+    const newY = y + move.dy;
+    if (isValidMove(newX, newY, board)) {
+      validMoves.push({ x: newX, y: newY });
     }
   }
 
   return validMoves;
 }
 
+function getAccessibility(x:number, y:number, board:number[][]) {
+  return getValidMoves(x, y, board).length;
+}
 
-export function getAllMoves(tablero: number[][], initialPosition: Posicion): Posicion[] {
-  const allMoves: Posicion[] = [];
-  const visited: Set<string> = new Set();
-
-  const recursiveSearch = (currentPosition: Posicion) => {
-    const key = `${currentPosition.fila}-${currentPosition.columna}`;
-    if (visited.has(key)) {
-      return;
-    }
-    visited.add(key);
-
-    allMoves.push(currentPosition);
-
-    const possibleMoves = getPossibleMoves(tablero, currentPosition);
-    for (const move of possibleMoves) {
-      recursiveSearch(move);
-    }
-  };
-
-  recursiveSearch(initialPosition);
-
-  return allMoves;
+function isValidMove(x: number, y: number, board: number[][]) {
+  return x >= 0 && y >= 0 && x < board.length && y < board[0].length && board[x][y] === -1;
 }

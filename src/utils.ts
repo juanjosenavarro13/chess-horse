@@ -1,18 +1,18 @@
-export function warnsdorff(board:number[][]) {
+export function warnsdorff(board:number[][], initialPosition: {y:number,x:number}) {
   const numRows = board.length;
   const numCols = board[0].length;
 
-  let x = 0;
-  let y = 4;
-  let moveNumber = 1;
+  let x = initialPosition.x;
+  let y = initialPosition.y;
+  let writeNumber = 1;
 
-  board[x][y] = moveNumber;
+  board[x][y] = writeNumber;
 
-  while (moveNumber < numRows * numCols) {
+  while (writeNumber < numRows * numCols) { // 64
     const validMoves = getValidMoves(x, y, board);
 
     if (validMoves.length === 0) {
-      console.log("No solution found.");
+      console.log("No solution.");
       return;
     }
 
@@ -24,8 +24,8 @@ export function warnsdorff(board:number[][]) {
 
     x = nextMove.x;
     y = nextMove.y;
-    moveNumber++;
-    board[x][y] = moveNumber;
+    writeNumber++;
+    board[x][y] = writeNumber;
   }
 
   return board;

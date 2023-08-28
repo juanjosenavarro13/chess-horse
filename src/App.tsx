@@ -16,14 +16,11 @@ function App() {
   };
 
   const handleClick = () => {
-    const newTablero = warnsdorff(tablero);
-    console.log(newTablero);
+    const newTablero = warnsdorff(tablero, { x: 0, y: 0 });
     if (newTablero) {
       setTablero(newTablero);
-      setStart(true);
-    } else {
-      setStart(false);
     }
+    setStart(!start);
   };
 
   useEffect(() => {

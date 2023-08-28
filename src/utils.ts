@@ -1,7 +1,7 @@
 import { Posicion } from "./tablero";
 
 
-export function activarCasillaTablero(tablero: number[][], columna: number, fila: number, numero: number) {
+export function printChessTable(tablero: number[][], fila: number, columna: number, numero: number) {
   if (tablero[fila][columna] !== 0) return tablero;
 
   const editTablero = [...tablero];
@@ -10,21 +10,8 @@ export function activarCasillaTablero(tablero: number[][], columna: number, fila
 }
 
 
-export function getNewPosition(tablero: number[][], movimiento: number, actualPosicion: Posicion) {
-  
-  const posibleMoves = getPossibleMoves(tablero, actualPosicion)
-  console.log(posibleMoves)
-  const newPosition: Posicion = {
-    fila: 2,
-    columna: 5
-  }
 
-  return { newTablero: activarCasillaTablero(tablero, newPosition.columna, newPosition.fila, movimiento), posicion: newPosition }
-}
-
-
-function getPossibleMoves(tablero: number[][], posicion: Posicion) {
-  console.log('posicion', posicion)
+export function getPossibleMoves(tablero: number[][], posicion: Posicion) {
   const possibleMoves: Posicion[] = [
     {fila: posicion.fila -1,columna: posicion.columna -2},
     {fila: posicion.fila -2,columna: posicion.columna -1},
@@ -46,4 +33,29 @@ function getPossibleMoves(tablero: number[][], posicion: Posicion) {
   }
 
   return validMoves;
+}
+
+
+export function getAllMoves(tablero: number[][], initialPosition: Posicion): Posicion[] {
+  const allMoves: Posicion[] = [];
+  const visited: Set<string> = new Set();
+
+  const recursiveSearch = (currentPosition: Posicion) => {
+    const key = `${currentPosition.fila}-${currentPosition.columna}`;
+    if (visited.has(key)) {
+      return;
+    }
+    visited.add(key);
+
+    allMoves.push(currentPosition);
+
+    const possibleMoves = getPossibleMoves(tablero, currentPosition);
+    for (const move of possibleMoves) {
+      recursiveSearch(move);
+    }
+  };
+
+  recursiveSearch(initialPosition);
+
+  return allMoves;
 }

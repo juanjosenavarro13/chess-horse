@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { getNewPosition } from './utils';
+import { getAllMoves } from './utils';
 import { Posicion } from './tablero';
 
 function App() {
@@ -17,28 +17,35 @@ function App() {
   ];
 
   const [tablero, setTablero] = useState<number[][]>(initTablero);
-  const [movimientos, setMovimientos] = useState<number>(1);
-  const [actualPosition, setActualPosition] = useState<Posicion>({ columna: 4, fila: 0 });
 
   const getColor = (row: number, column: number): 'white' | 'black' => {
     return (row + column) % 2 === 0 ? 'white' : 'black';
   };
 
   const handleClick = () => {
-    const actualMovimiento = movimientos + 1;
-    const { newTablero, posicion: nuevaPosicion } = getNewPosition(tablero, actualMovimiento, actualPosition);
-    setActualPosition(nuevaPosicion);
-    setMovimientos(actualMovimiento);
-    setTablero(newTablero);
+    const allMoves = getAllMoves(tablero, { fila: 0, columna: 4 });
+    executeMovesWithInterval(allMoves);
+  };
+
+  const executeMovesWithInterval = (allMoves: Posicion[]) => {
+    allMoves.forEach((move, index) => {
+      setTimeout(() => {
+        setTablero((prevTablero) => {
+          const newTablero = [...prevTablero];
+          newTablero[move.fila][move.columna] = index + 1;
+          return newTablero;
+        });
+      }, (index + 1) * 1000);
+    });
   };
 
   useEffect(() => {
     console.log('render');
-  }, [tablero, movimientos]);
+  }, [tablero]);
 
   return (
     <>
-      <button onClick={handleClick}>MOVIMIENTOS: {movimientos}</button>
+      <button onClick={handleClick}>Ejecutar</button>
       <table className='chessboard'>
         <tbody>
           {tablero.map((row, indexRow) => {

@@ -2,33 +2,41 @@ export function warnsdorff(board:number[][], initialPosition: {y:number,x:number
   const numRows = board.length;
   const numCols = board[0].length;
 
+  const copiedBoard = board.map((row) => [...row]);
+
   let x = initialPosition.x;
   let y = initialPosition.y;
   let writeNumber = 1;
 
-  board[x][y] = writeNumber;
+  copiedBoard[x][y] = writeNumber;
+  const pathBoard = [{ x, y }];
 
-  while (writeNumber < numRows * numCols) { // 64
-    const validMoves = getValidMoves(x, y, board);
+  while (writeNumber < numRows * numCols) {
+    const validMoves = getValidMoves(x, y, copiedBoard);
 
     if (validMoves.length === 0) {
       console.log("No solution.");
       return;
     }
 
-    const accessibilityScores = validMoves.map(move => getAccessibility(move.x, move.y, board));
+    const accessibilityScores = validMoves.map((move) =>
+      getAccessibility(move.x, move.y, copiedBoard)
+    );
     const minAccessibility = Math.min(...accessibilityScores);
 
-    const nextMoveIndex = accessibilityScores.findIndex(score => score === minAccessibility);
+    const nextMoveIndex = accessibilityScores.findIndex(
+      (score) => score === minAccessibility
+    );
     const nextMove = validMoves[nextMoveIndex];
 
     x = nextMove.x;
     y = nextMove.y;
     writeNumber++;
-    board[x][y] = writeNumber;
+    copiedBoard[x][y] = writeNumber;
+    pathBoard.push({ x, y });
   }
 
-  return board;
+  return { board: copiedBoard, pathBoard };
 }
 
 

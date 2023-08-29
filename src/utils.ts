@@ -1,7 +1,9 @@
+import { type PathBoard, type Result } from './utils.d';
+
 export function warnsdorff(
   board: number[][],
   initialPosition: { y: number; x: number },
-) {
+): Result {
   const numRows = board.length;
   const numCols = board[0].length;
 
@@ -21,7 +23,7 @@ export function warnsdorff(
       throw new Error('no tiene solucion');
     }
 
-    const accessibilityScores = validMoves.map((move) =>
+    const accessibilityScores = validMoves.map((move): number =>
       getAccessibility(move.x, move.y, copiedBoard),
     );
     const minAccessibility = Math.min(...accessibilityScores);
@@ -41,7 +43,7 @@ export function warnsdorff(
   return { board: copiedBoard, pathBoard };
 }
 
-function getValidMoves(x: number, y: number, board: number[][]) {
+function getValidMoves(x: number, y: number, board: number[][]): PathBoard[] {
   const moves = [
     { dx: 1, dy: 2 },
     { dx: 2, dy: 1 },
@@ -65,11 +67,11 @@ function getValidMoves(x: number, y: number, board: number[][]) {
   return validMoves;
 }
 
-function getAccessibility(x: number, y: number, board: number[][]) {
+function getAccessibility(x: number, y: number, board: number[][]): number {
   return getValidMoves(x, y, board).length;
 }
 
-function isValidMove(x: number, y: number, board: number[][]) {
+function isValidMove(x: number, y: number, board: number[][]): boolean {
   return (
     x >= 0 &&
     y >= 0 &&

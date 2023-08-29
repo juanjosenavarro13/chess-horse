@@ -11,12 +11,14 @@ function App() {
     const [tablero, setTablero] = useState<number[][]>(initTablero);
     const [start, setStart] = useState(false);
 
+    const position = { x: 0, y: 0 };
+
     const getColor = (row: number, column: number): 'white' | 'black' => {
         return (row + column) % 2 === 0 ? 'white' : 'black';
     };
 
     const handleClickFull = () => {
-        const result = warnsdorff(tablero, { x: 0, y: 0 });
+        const result = warnsdorff(tablero, position);
         if (result?.board) {
             setTablero(result.board);
         }
@@ -24,11 +26,11 @@ function App() {
     };
 
     const handleClickOne = () => {
-        const result = warnsdorff(tablero, { x: 0, y: 0 });
+        const result = warnsdorff(tablero, position);
         if (result?.pathBoard) {
             setStart(true);
 
-            const delay = 1000; // 1 segundo de retraso entre movimientos
+            const delay = 1000;
             let moveIndex = 0;
 
             const moveOneByOne = () => {

@@ -15,8 +15,7 @@ export function warnsdorff(board:number[][], initialPosition: {y:number,x:number
     const validMoves = getValidMoves(x, y, copiedBoard);
 
     if (validMoves.length === 0) {
-      console.log("No solution.");
-      return;
+      throw new Error('no tiene solucion')
     }
 
     const accessibilityScores = validMoves.map((move) =>

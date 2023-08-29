@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { warnsdorff } from "./utils";
+import { useEffect, useState } from 'react';
+import './App.css';
+import { warnsdorff } from './utils';
 
 function App() {
   const numRows = 5;
   const numCols = 5;
 
   const initTablero = Array.from({ length: numRows }, () =>
-    Array(numCols).fill(-1)
+    Array(numCols).fill(-1),
   );
 
   const [tablero, setTablero] = useState<number[][]>(initTablero);
@@ -15,8 +15,8 @@ function App() {
 
   const position = { x: 0, y: 0 };
 
-  const getColor = (row: number, column: number): "white" | "black" => {
-    return (row + column) % 2 === 0 ? "white" : "black";
+  const getColor = (row: number, column: number): 'white' | 'black' => {
+    return (row + column) % 2 === 0 ? 'white' : 'black';
   };
 
   const handleClickFull = () => {
@@ -66,7 +66,7 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("tablero", tablero);
+    console.log('tablero', tablero);
   }, [tablero, start]);
 
   return (
@@ -77,14 +77,14 @@ function App() {
         <tbody>
           {tablero.map((row, indexRow) => {
             return (
-              <tr key={"row" + indexRow}>
+              <tr key={'row' + indexRow}>
                 {row.map((value, indexColumn) => {
                   return (
                     <td
-                      key={"column" + indexColumn}
+                      key={'column' + indexColumn}
                       className={getColor(indexRow, indexColumn)}
                     >
-                      {value !== -1 ? value : ""}
+                      {value !== -1 ? value : ''}
                     </td>
                   );
                 })}

@@ -1,4 +1,7 @@
-export function warnsdorff(board:number[][], initialPosition: {y:number,x:number}) {
+export function warnsdorff(
+  board: number[][],
+  initialPosition: { y: number; x: number },
+) {
   const numRows = board.length;
   const numCols = board[0].length;
 
@@ -15,16 +18,16 @@ export function warnsdorff(board:number[][], initialPosition: {y:number,x:number
     const validMoves = getValidMoves(x, y, copiedBoard);
 
     if (validMoves.length === 0) {
-      throw new Error('no tiene solucion')
+      throw new Error('no tiene solucion');
     }
 
     const accessibilityScores = validMoves.map((move) =>
-      getAccessibility(move.x, move.y, copiedBoard)
+      getAccessibility(move.x, move.y, copiedBoard),
     );
     const minAccessibility = Math.min(...accessibilityScores);
 
     const nextMoveIndex = accessibilityScores.findIndex(
-      (score) => score === minAccessibility
+      (score) => score === minAccessibility,
     );
     const nextMove = validMoves[nextMoveIndex];
 
@@ -38,10 +41,7 @@ export function warnsdorff(board:number[][], initialPosition: {y:number,x:number
   return { board: copiedBoard, pathBoard };
 }
 
-
-
-
-function getValidMoves(x:number, y:number, board:number[][]) {
+function getValidMoves(x: number, y: number, board: number[][]) {
   const moves = [
     { dx: 1, dy: 2 },
     { dx: 2, dy: 1 },
@@ -50,7 +50,7 @@ function getValidMoves(x:number, y:number, board:number[][]) {
     { dx: -1, dy: -2 },
     { dx: -2, dy: -1 },
     { dx: -2, dy: 1 },
-    { dx: -1, dy: 2 }
+    { dx: -1, dy: 2 },
   ];
 
   const validMoves = [];
@@ -65,10 +65,16 @@ function getValidMoves(x:number, y:number, board:number[][]) {
   return validMoves;
 }
 
-function getAccessibility(x:number, y:number, board:number[][]) {
+function getAccessibility(x: number, y: number, board: number[][]) {
   return getValidMoves(x, y, board).length;
 }
 
 function isValidMove(x: number, y: number, board: number[][]) {
-  return x >= 0 && y >= 0 && x < board.length && y < board[0].length && board[x][y] === -1;
+  return (
+    x >= 0 &&
+    y >= 0 &&
+    x < board.length &&
+    y < board[0].length &&
+    board[x][y] === -1
+  );
 }

@@ -77,11 +77,11 @@ function App() {
         <tbody>
           {tablero.map((row, indexRow) => {
             return (
-              <tr key={'row' + indexRow}>
+              <tr key={'row' + JSON.stringify(row)}>
                 {row.map((value, indexColumn) => {
                   return (
                     <td
-                      key={'column' + indexColumn}
+                      key={'column' + JSON.stringify(row)}
                       className={getColor(indexRow, indexColumn)}
                     >
                       {value !== -1 ? value : ''}

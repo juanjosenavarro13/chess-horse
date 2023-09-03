@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 import { warnsdorff } from './utils';
 
 function App() {
-  const numRows = 5;
-  const numCols = 5;
+  const [numRows, setNumRows] = useState<number>(5);
+  const [numCols, setNumCols] = useState<number>(5);
 
-  const initTablero = Array.from({ length: numRows }, () =>
-    Array(numCols).fill(-1),
+  const initTablero = (rows: number, cols: number) => {
+    return Array.from({ length: rows }, () => Array(cols).fill(-1));
+  };
+  const [tablero, setTablero] = useState<number[][]>(
+    initTablero(numRows, numCols),
   );
-
-  const [tablero, setTablero] = useState<number[][]>(initTablero);
   const [start, setStart] = useState(false);
 
   const position = { x: 0, y: 0 };
@@ -65,23 +67,27 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    console.log('tablero', tablero);
-  }, [tablero, start]);
+  const handleReset = () => {
+    setNumRows(5);
+    setNumCols(5);
+    setTablero(initTablero(5, 5));
+    setStart(false);
+  };
 
   return (
     <>
+      {start && <button onClick={handleReset}>Reiniciar</button>}
       {!start && <button onClick={handleClickFull}>Ver Todo</button>}
       {!start && <button onClick={handleClickOne}>Ejecutar Auto</button>}
       <table className="chessboard">
         <tbody>
           {tablero.map((row, indexRow) => {
             return (
-              <tr key={'row' + indexRow}>
+              <tr key={'row' + uuidv4()}>
                 {row.map((value, indexColumn) => {
                   return (
                     <td
-                      key={'column' + indexColumn}
+                      key={'column' + uuidv4()}
                       className={getColor(indexRow, indexColumn)}
                     >
                       {value !== -1 ? value : ''}
@@ -93,6 +99,34 @@ function App() {
           })}
         </tbody>
       </table>
+      {!start && (
+        <div>
+          <div>
+            <label htmlFor="y">Columnas:</label>
+            <input
+              name="y"
+              type="number"
+              value={numCols}
+              onChange={(value) => {
+                const valueNumber = Number(value.target.value);
+                setNumCols(valueNumber);
+                setTablero(initTablero(numRows, valueNumber));
+              }}
+            />
+          </div>
+          <label htmlFor="x">Filas:</label>
+          <input
+            name="x"
+            type="number"
+            value={numRows}
+            onChange={(value) => {
+              const valueNumber = Number(value.target.value);
+              setNumRows(valueNumber);
+              setTablero(initTablero(valueNumber, numCols));
+            }}
+          />
+        </div>
+      )}
     </>
   );
 }
